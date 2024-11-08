@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symptom Chatbot & Daily Water Intake Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('background-image.jpg'); /* Add your background image */
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+            flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        header {
+            background-color: rgba(171, 255, 223, 0.8);
+            padding: 20px;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 36px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin-top: 100px; /* Adjust to position correctly after header */
+            padding: 0 20px;
+            flex-wrap: wrap; /* Allow wrapping for smaller screens */
+        }
+
+        .chatbox-container, .water-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 45%; /* Adjust width for both boxes */
+            margin: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            max-height: 75vh; /* Maximum height of the box */
+            overflow: auto; /* Allows scrolling when content overflows */
+            box-sizing: border-box; /* Ensures padding does not affect width */
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            width: 100%; /* Ensures the input field takes up the whole width */
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .input-group input, .input-group select {
+            padding: 15px;
+            font-size: 18px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 100%;
+        }
+
+        button {
+            padding: 15px 25px;
+            font-size: 18px;
+            cursor: pointer;
+            border: none;
+            background-color: #3a96e6;
+            color: white;
+            border-radius: 5px;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #14fffb;
+        }
+
+        .input-group select {
+            width: 100%;
+        }
+
+        .chatbox {
+            width: 100%;
+            height: 250px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 20px;
+            overflow-y: auto;
+            font-size: 16px;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        #message-input {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+
+        .symptom-result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        .error-field {
+            border-color: red;
+        }
+
+        /* Prevent horizontal scrolling on chatbox */
+        .chatbox-container {
+            width: 100%;
+            max-width: 550px; /* Ensures the width of the chatbot container fits on smaller screens */
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        /* Make input and button fit within the chatbox */
+        #message-input {
+            width: 100%; /* Full width input box */
+        }
+
+        /* Adjust button width to match */
+        button {
+            width: 100%; /* Full width button */
+        }
+
+        /* Prevent horizontal scrolling in Daily Water Intake Calculator */
+        .water-container {
+            width: 100%;
+            max-width: 550px; /* Prevents overflow */
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-x: hidden; /* Prevents horizontal scroll */
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Welcome to the Symptom Chatbot & Daily Water Intake Calculator</h1>
+</header>
+
+<div class="container">
+    <!-- Symptom Chatbot Section -->
+    <div class="chatbox-container">
+        <h2>Symptom Chatbot</h2>
+        <div class="chatbox" id="chatbox">
+            <!-- Chat messages will appear here -->
+        </div>
+        <input type="text" id="message-input" placeholder="Enter your symptoms..." />
+        <button onclick="sendMessage()">Send</button>
+        <div class="symptom-result" id="symptom-result"></div>
+    </div>
+
+    <!-- Daily Water Intake Calculator Section -->
+    <div class="water-container">
+        <h2>Daily Water Intake Calculator</h2>
+        
+        <!-- Form for Daily Water Calculation -->
+        <div class="input-group">
+            <label for="age">Age (years):</label>
+            <input type="number" id="age" placeholder="Enter your age" min="1" required />
+            <div id="age-error" class="error"></div>
+        </div>
+
+        <div class="input-group">
+            <label for="weight">Weight (kg):</label>
+            <input type="number" id="weight" placeholder="Enter your weight" min="20" required />
+            <div id="weight-error" class="error"></div>
+        </div>
+
+        <div class="input-group">
+            <label for="height">Height (cm):</label>
+            <input type="number" id="height" placeholder="Enter your height" min="50" required />
+            <div id="height-error" class="error"></div>
+        </div>
+
+        <div class="input-group">
+            <label for="gender">Gender:</label>
+            <select id="gender" required>
+                <option value="">Select gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="prefer-not-to-speak">Prefer not to say</option>
+            </select>
+            <div id="gender-error" class="error"></div>
+        </div>
+
+        <div class="input-group">
+            <label for="activity-level">Activity Level:</label>
+            <select id="activity-level" required>
+                <option value="">Select activity level</option>
+                <option value="sedentary">Sedentary (little or no exercise)</option>
+                <option value="lightly-active">Lightly active (light exercise 1-3 days/week)</option>
+                <option value="moderately-active">Moderately active (moderate exercise 3-5 days/week)</option>
+                <option value="very-active">Very active (intense exercise 6-7 days/week)</option>
+                <option value="extremely-active">Extremely active (multiple sessions of intense exercise per day)</option>
+            </select>
+            <div id="activity-level-error" class="error"></div>
+        </div>
+
+        <button onclick="calculateWaterIntake()">Calculate Water Intake</button>
+
+        <div id="water-intake-result"></div>
+    </div>
+</div>
+
+<script>
+    // Symptom Chatbot Code
+    const chatbox = document.getElementById("chatbox");
+    const messageInput = document.getElementById("message-input");
+
+    function displayMessage(message, isUser = true) {
+        const messageDiv = document.createElement("div");
+        messageDiv.textContent = message;
+        messageDiv.style.textAlign = isUser ? "right" : "left";
+        chatbox.appendChild(messageDiv);
+        chatbox.scrollTop = chatbox.scrollHeight;  // Scroll to the bottom
+    }
+
+    function sendMessage() {
+        const message = messageInput.value;
+        if (message.trim()) {
+            displayMessage(message);
+            simulateBotResponse(message);
+            messageInput.value = "";  // Clear input
+        }
+    }
+
+    function simulateBotResponse(message) {
+        const simulatedResponse = "I'm sorry, but I can't analyze symptoms yet."; // Replace with real logic
+        displayMessage(simulatedResponse, false);
+    }
+
+    // Water Intake Calculation Code
+    function calculateWaterIntake() {
+        const age = document.getElementById("age").value;
+        const weight = document.getElementById("weight").value;
+        const height = document.getElementById("height").value;
+        const gender = document.getElementById("gender").value;
+        const activityLevel = document.getElementById("activity-level").value;
+
+        let valid = true;
+
+        // Validate inputs
+        clearErrors();
+
+        if (!age || age < 1) {
+            document.getElementById("age-error").textContent = "Please enter a valid age.";
+            valid = false;
+        }
+
+        if (!weight || weight < 20) {
+            document.getElementById("weight-error").textContent = "Please enter a valid weight.";
+            valid = false;
+        }
+
+        if (!height || height < 50) {
+            document.getElementById("height-error").textContent = "Please enter a valid height.";
+            valid = false;
+        }
+
+        if (!gender) {
+            document.getElementById("gender-error").textContent = "Please select a gender.";
+            valid = false;
+        }
+
+        if (!activityLevel) {
+            document.getElementById("activity-level-error").textContent = "Please select an activity level.";
+            valid = false;
+        }
+
+        if (valid) {
+            const waterIntake = calculateWater(age, weight, height, gender, activityLevel);
+            document.getElementById("water-intake-result").textContent = `Your recommended daily water intake is: ${waterIntake.toFixed(2)} ml.`;
+        }
+    }
+
+    function calculateWater(age, weight, height, gender, activityLevel) {
+        let baseWaterIntake = (weight * 30);  // Basic calculation: 30 ml per kg of body weight
+
+        // Adjust based on activity level
+        switch (activityLevel) {
+            case "sedentary":
+                baseWaterIntake *= 1.2;
+                break;
+            case "lightly-active":
+                baseWaterIntake *= 1.375;
+                break;
+            case "moderately-active":
+                baseWaterIntake *= 1.55;
+                break;
+            case "very-active":
+                baseWaterIntake *= 1.725;
+                break;
+            case "extremely-active":
+                baseWaterIntake *= 1.9;
+                break;
+        }
+
+        // Gender adjustments
+        if (gender === "male") {
+            baseWaterIntake += 500; // Men need more water generally
+        } else if (gender === "female") {
+            baseWaterIntake -= 100; // Women generally require slightly less water
+        }
+
+        return baseWaterIntake;
+    }
+
+    function clearErrors() {
+        const errorFields = document.querySelectorAll(".error");
+        const inputFields = document.querySelectorAll("input, select");
+
+        errorFields.forEach(error => error.textContent = "");
+        inputFields.forEach(field => field.classList.remove("error-field"));
+    }
+</script>
+
+</body>
+</html>
