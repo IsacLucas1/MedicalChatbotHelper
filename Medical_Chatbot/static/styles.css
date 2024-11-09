@@ -1,0 +1,263 @@
+/* Resetare CSS pentru a asigura un design uniform */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Fondul paginii */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #3a96e6, #10d8d5);
+    background-size: cover;
+    background-attachment: fixed;
+    color: #fff;
+    overflow-x: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 0 20px;
+}
+
+/* Header fixat în partea de sus cu dimensiune mai mică */
+header {
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 15px;
+    text-align: center;
+    font-size: 1.5rem; /* Dimensiunea titlului redusă */
+    border-bottom: 4px solid #fff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    z-index: 100;
+    transition: background 0.5s ease;
+}
+
+header:hover {
+    background: rgba(0, 0, 0, 0.9);
+}
+
+/* Containerul pentru cele două opțiuni (Chatbot și Calculator Apă) */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: stretch; /* Asigurăm că ambele secțiuni sunt la aceeași înălțime */
+    flex-wrap: wrap;
+    margin-top: 120px; /* Ajustăm spațiul pentru a face loc headerului fixat */
+    gap: 30px;
+    width: 100%;
+    max-width: 1400px;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+/* Stiluri pentru fiecare opțiune (chatbot și calculul apei) */
+.chatbox-container, .water-container {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 25px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(15px);
+    color: #0e0101;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+    flex: 1 1 400px;
+    height: 500px; /* Stabilim o înălțime constantă pentru ambele boxuri */
+    overflow-y: auto; /* Permitem scroll în interiorul secțiunii când conținutul depășește */
+}
+
+/* Stilizare pentru hover pe ambele boxuri */
+.chatbox-container:hover, .water-container:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+}
+
+/* Chatbox stilizat cu bordură animată */
+.chatbox {
+    background: #5ccae5;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    height: 250px;
+    margin-bottom: 20px;
+    padding: 15px;
+    overflow-y: auto;
+    font-size: 1rem;
+    color: #020303;
+    transition: border-color 0.3s ease;
+}
+ 
+/* Stiluri pentru input-ul de la chatbot (acum seamănă cu cele de la calculul apei) */
+.chatbox input, 
+.chatbox textarea {
+    width: 100%; /* Lățime completă a input-ului */
+    padding: 12px; /* Adăugăm padding pentru a face textul să nu fie lipit de margini */
+    font-size: 1.1rem; /* Dimensiunea textului */
+    border-radius: 8px; /* Colțuri rotunjite pentru un aspect mai plăcut */
+    border: 2px solid rgba(255, 255, 255, 0.3); /* Bordură transparentă albă */
+    background: rgba(255, 255, 255, 0.2); /* Fundal semi-transparent pentru input */
+    color: #8ff7f5; /* Text alb */
+    transition: border-color 0.3s ease; /* Efect de tranziție la focus pe bordură */
+    box-sizing: border-box; /* Asigurăm că padding-ul nu va modifica dimensiunile elementului */
+    margin-bottom: 20px; /* Spațiu sub input */
+    height: 120px; /* Înălțime fixă pentru textarea pentru o vizualizare mai bună */
+    resize: none; /* Dezactivează redimensionarea pentru textarea */
+}
+
+/* Placeholder personalizat pentru input-ul chatbot */
+.chatbox input::placeholder,
+.chatbox textarea::placeholder {
+    color: rgba(72, 206, 255, 0.7); /* Culoare deschisă pentru placeholder */
+    font-style: italic; /* Stilizăm placeholder-ul cu italice */
+}
+
+/* Efect la focus pentru input și textarea */
+.chatbox input:focus,
+.chatbox textarea:focus {
+    border-color: #3a96e6; /* Albastru la focus pentru bordură */
+    outline: none; /* Eliminăm outline-ul implicit */
+}
+
+/* Ascunderea placeholder-ului când utilizatorul scrie */
+.chatbox input:focus::placeholder,
+.chatbox textarea:focus::placeholder {
+    color: transparent; /* Ascundem placeholder-ul când se scrie */
+}
+
+
+/* Placeholder personalizat pentru input-ul chatbot */
+.chatbox input::placeholder,
+.chatbox textarea::placeholder {
+    color: rgba(72, 183, 247, 0.7);
+    font-style: italic;
+}
+
+/* Efect la focus pentru input și textarea */
+.chatbox input:focus,
+.chatbox textarea:focus {
+    border-color: #3a96e6; /* Albastru la focus */
+    outline: none;
+}
+
+/* Ascunderea placeholder-ului când utilizatorul scrie */
+.chatbox input:focus::placeholder,
+.chatbox textarea:focus::placeholder {
+    color: transparent;
+}
+
+/* Câmpuri de input stilizate pentru secțiunea de apă */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    color: #f0f0f0;
+}
+
+.input-group input,
+.input-group select {
+    padding: 12px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.2);
+    color: #0b0b0b;
+    transition: border-color 0.3s ease;
+}
+
+/* Stil pentru select (dropdown) pentru a fi similar cu restul paginii */
+.input-group select {
+    background: rgba(255, 255, 255, 0.2); /* Fundal transparent dar ușor vizibil */
+    color: #777777; /* Text alb */
+    border: 2px solid rgba(255, 255, 255, 0.3); /* Bordură albă subtire */
+    border-radius: 8px;
+    padding: 12px;
+    appearance: none; /* Îndepărtăm săgeata implicită */
+    -webkit-appearance: none; /* Pentru Safari */
+    -moz-appearance: none; /* Pentru Firefox */
+    width: 100%;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+/* Schimbăm stilul la focus pe select */
+.input-group select:focus {
+    border-color: #3a96e6; /* Albastru la focus */
+    outline: none; /* Îndepărtăm outline-ul implicit */
+}
+
+/* Adăugăm o săgeată personalizată pentru dropdown */
+.input-group select::-ms-expand {
+    display: none; /* Îndepărtăm săgeata pe IE */
+}
+
+/* Culoare de fundal și text pentru opțiunile dropdown-ului */
+.input-group select option {
+    background-color: rgba(4, 60, 203, 0.7); /* Fundal închis pentru opțiuni */
+    color: #fff; /* Text alb pe fundal închis */
+}
+
+/* Modificăm stilul pentru opțiuni când sunt selectate */
+.input-group select option:checked {
+    background-color: #3a96e6; /* Fundal albastru la selecția unei opțiuni */
+    color: #fff; /* Text alb pentru selecție */
+}
+
+/* Butoane cu efecte vizuale */
+button {
+    background: linear-gradient(135deg, #3a96e6, #10d8d5);
+    color: #00146f;
+    font-size: 1.2rem;
+    padding: 15px;
+    border: none;
+    border-radius: 50px;
+    width: 100%;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Mesaje de eroare */
+.error {
+    color: #ff6b6b;
+    font-size: 1rem;
+    margin-top: 5px;
+}
+
+/* Rezultatele apei recomandate */
+#water-intake-result {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #0d00ff;
+    margin-top: 20px;
+}
+
+/* Animație pentru încărcare */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.loading {
+    animation: pulse 1s infinite;
+    color: #3a96e6;
+}

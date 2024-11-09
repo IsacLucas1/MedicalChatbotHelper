@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symptom Chatbot & Daily Water Intake Calculator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+<header>
+    <h1>Welcome to the Symptom Chatbot & Daily Water Intake Calculator</h1>
+</header>
+
+<div class="container">
+    <!-- Symptom Chatbot Section -->
+    <div class="chatbox-container">
+        <h2>Symptom Chatbot</h2>
+        <div class="chatbox" id="chatbox">
+            <!-- Chat messages will appear here -->
+        </div>
+        <div class="input-group">
+            <label for="text">Symptoms</label>
+            <input type="text" id="message-input" placeholder="Enter your symptoms..."/>
+        </div>
+        <button onclick="sendMessage()">Send</button>
+        <div class="symptom-result" id="symptom-result"></div>
+    </div>
+
+    <!-- Daily Water Intake Calculator Section -->
+    <div class="water-container">
+        <h2>Daily Water Intake Calculator</h2>
+
+        <!-- Form for Daily Water Calculation -->
+        <div class="input-group">
+            <label for="age">Age (years):</label>
+            <input type="number" id="age" placeholder="Enter your age" min="1" required />
+            <div id="age-error" class="error"></div>
+        </div>
+
+        <div class="input-group">
+            <label for="weight">Weight (kg):</label>
+            <input type="number" id="weight" placeholder="Enter your weight" min="20" required />
+            <div id="weight-error" class="error"></div>
+        </div>
+
+        <div class="input-group">
+            <label for="height">Height (cm):</label>
+            <input type="number" id="height" placeholder="Enter your height" min="50" required/>
+            <div id="height-error" class="error"></div>
+        </div>
+
+        <div class="input-group">
+            <label for="gender">Gender:</label>
+            <select id="gender" required>
+                <option value="">Select gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="prefer-not-to-speak">Prefer not to say</option>
+            </select>
+            <div id="gender-error" class="error"></div>
+        </div>
+
+        <div class="input-group">
+            <label for="activity-level">Activity Level:</label>
+            <select id="activity-level" required>
+                <option value="">Select activity level</option>
+                <option value="sedentary">Sedentary</option>
+                <option value="lightly-active">Lightly active</option>
+                <option value="moderately-active">Moderately active</option>
+                <option value="very-active">Very active</option>
+                <option value="extremely-active">Extremely active</option>
+            </select>
+            <div id="activity-level-error" class="error"></div>
+        </div>
+
+        <button onclick="calculateWaterIntake()">Calculate Water Intake</button>
+        <div id="water-intake-result"></div>
+    </div>
+</div>
+
+<script>
+// Function to handle chatbot interaction
+function sendMessage() {
+    var message = document.getElementById("message-input").value.trim();
+    if (!message) return;
+
+    // Add message to chat
+    const chatbox = document.getElementById("chatbox");
+    const userMessageDiv = document.createElement('div');
+    userMessageDiv.textContent = "You: " + message;
+    chatbox.appendChild(userMessageDiv);
+
+    // Send message to Flask backend
+    fetch("/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: message })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const botMessageDiv = document.createElement('div');
+        botMessageDiv.textContent = "Bot: " + data.response;
+        chatbox.appendChild(botMessageDiv);
+        document.getElementById("message-input").value = '';  // Clear input
+    });
+}
+
+// Function to handle water intake calculation
+function calculateWaterIntake() {
+    const age = document.getElementById("age").value;
+    const weight = document.getElementById("weight").value;
+    const height = document.getElementById("height").value;
+    const gender = document.getElementById("gender").value;
+    const activityLevel = document.getElementById("activity-level").value;
+
+    let valid = true;
+    clearErrors();
+
+    if (!age || age < 1) {
+        document.getElementById("age-error").textContent = "Please enter a valid age.";
+        valid = false;
+    }
+    if (!weight || weight < 20) {
+        document.getElementById("weight-error").textContent = "Please enter a valid weight.";
+        valid = false;
+    }
+    if (!height || height < 50) {
+        document.getElementById("height-error").textContent = "Please enter a valid height.";
+        valid = false;
+    }
+    if (!gender) {
+        document.getElementById("gender-error").textContent = "Please select a gender.";
+        valid = false;
+    }
+    if (!activityLevel) {
+        document.getElementById("activity-level-error").textContent = "Please select an activity level.";
+        valid = false;
+    }
+
+    if (valid) {
+        const waterIntake = calculateWater(age, weight, height, gender, activityLevel);
+        document.getElementById("water-intake-result").textContent = `Your recommended daily water intake is: ${waterIntake.toFixed(2)} ml.`;
+    }
+}
+
+function calculateWater(age, weight, height, gender, activityLevel) {
+    let baseWaterIntake = weight * 30;
+    switch (activityLevel) {
+        case "sedentary": baseWaterIntake *= 1.2; break;
+        case "lightly-active": baseWaterIntake *= 1.375; break;
+        case "moderately-active": baseWaterIntake *= 1.55; break;
+        case "very-active": baseWaterIntake *= 1.725; break;
+        case "extremely-active": baseWaterIntake *= 1.9; break;
+    }
+    if (gender === "male") baseWaterIntake += 500;
+    else if (gender === "female") baseWaterIntake -= 100;
+    if (age > 65) baseWaterIntake += 200;
+    return baseWaterIntake;
+}
+
+function clearErrors() {
+    document.getElementById("age-error").textContent = "";
+    document.getElementById("weight-error").textContent = "";
+    document.getElementById("height-error").textContent = "";
+    document.getElementById("gender-error").textContent = "";
+    document.getElementById("activity-level-error").textContent = "";
+}
+
+</script>
+
+</body>
+</html>
